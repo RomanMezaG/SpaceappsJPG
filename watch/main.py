@@ -1,6 +1,5 @@
 import asyncio
 import csv
-import getpass
 import traceback
 
 from contextlib import suppress
@@ -10,6 +9,8 @@ from pathlib import Path
 from bleak import BleakClient, BleakScanner
 from bleak.exc import BleakError
 from Crypto.Cipher import AES
+
+from hrv import extraer_rr_ms
 
 
 DIRECCION = "F0:D8:99:0D:4E:06"
@@ -31,7 +32,9 @@ def obtener_caracteristica(cliente, uuid):
     caracteristica = cliente.services.get_characteristic(uuid)
 
     if caracteristica is None:
-        raise RuntimeError(f"La pulsera no expone la característica {uuid}.")
+        raise RuntimeError(
+            f"The watch does not expose characteristic {uuid}."
+        )
 
     return caracteristica
 
@@ -45,7 +48,8 @@ async def escribir(cliente, caracteristica, contenido):
         respuesta = False
     else:
         raise RuntimeError(
-            f"La característica {caracteristica.uuid} no permite escritura."
+            f"Characteristic {caracteristica.uuid} "
+            "does not support writes."
         )
 
     await cliente.write_gatt_char(
@@ -80,7 +84,7 @@ async def autenticar(cliente, clave):
 
                         if len(desafio) != 16:
                             raise RuntimeError(
-                                "El desafío recibido no tiene 16 bytes."
+                                "The received authentication challenge is not 16 bytes long."
                             )
 
                         cifrador = AES.new(clave, AES.MODE_ECB)
@@ -94,30 +98,34 @@ async def autenticar(cliente, clave):
                         )
 
                     elif encabezado == b"\x10\x03\x01":
-                        print("Autenticación aceptada por la pulsera.")
+                        print(
+                            "Autenticación aceptada por la pulsera."
+                        )
                         return
 
                     elif encabezado == b"\x10\x03\x04":
                         raise RuntimeError(
-                            "La pulsera rechazó la AuthKey. "
-                            "Puede ser una clave antigua o de otra vinculación."
+                            "The watch rejected the AuthKey. "
+                            "The key may be outdated "
+                            "or belong to another pairing."
                         )
 
                     elif encabezado == b"\x10\x02\x04":
                         raise RuntimeError(
-                            "La pulsera rechazó la solicitud del desafío."
+                            "The watch rejected the request "
+                            "for an authentication challenge."
                         )
 
                     else:
                         raise RuntimeError(
-                            "Respuesta de autenticación no reconocida: "
+                            "Unrecognized authentication response: "
                             + encabezado.hex()
                         )
 
         except TimeoutError:
             raise RuntimeError(
-                "La autenticación no respondió en 30 segundos. "
-                "Comprueba que la pulsera siga conectada."
+                "Authentication did not respond within 30 seconds. "
+                "Check that the watch is still connected."
             ) from None
 
     finally:
@@ -128,24 +136,33 @@ async def autenticar(cliente, clave):
 
 def interpretar_pulso(paquete):
     if len(paquete) < 2:
-        raise ValueError("Paquete de pulso demasiado corto.")
+        raise ValueError("Heart rate packet is too short.")
 
     indicadores = paquete[0]
     longitud = 2 if indicadores & 0x01 else 1
 
     if len(paquete) < 1 + longitud:
-        raise ValueError("Paquete de pulso incompleto.")
+        raise ValueError("Incomplete heart rate packet.")
 
-    pulso = int.from_bytes(paquete[1:1 + longitud], "little")
+    pulso = int.from_bytes(
+        paquete[1:1 + longitud],
+        "little",
+    )
 
     contacto = "No informado"
+
     if indicadores & 0x04:
         contacto = "Sí" if indicadores & 0x02 else "No"
 
     return pulso, contacto
 
 
-async def leer_pulso(cliente, publicar=None, actualizar=None):
+async def leer_pulso(
+    cliente,
+    publicar=None,
+    actualizar=None,
+    publicar_rr=None,
+):
     medida = obtener_caracteristica(cliente, UUID_PULSO)
     control = obtener_caracteristica(cliente, UUID_CONTROL)
     lecturas = asyncio.Queue()
@@ -156,6 +173,14 @@ async def leer_pulso(cliente, publicar=None, actualizar=None):
 
     suscrito = False
     medicion_solicitada = False
+
+    # Diagnóstico de los datos realmente recibidos.
+    aviso_sin_rr = False
+    rr_detectado = False
+    paquetes_procesados = 0
+    paquetes_con_rr = 0
+    intervalos_recibidos = 0
+    errores_rr = 0
 
     try:
         print("Preparando medición del pulso...")
@@ -180,7 +205,9 @@ async def leer_pulso(cliente, publicar=None, actualizar=None):
         archivo = carpeta / nombre
 
         with archivo.open(
-            "w", newline="", encoding="utf-8"
+            "w",
+            newline="",
+            encoding="utf-8",
         ) as salida:
             escritor = csv.writer(salida)
             escritor.writerow([
@@ -194,6 +221,11 @@ async def leer_pulso(cliente, publicar=None, actualizar=None):
 
             print(f"Guardando lecturas en: {archivo}")
             print("Coloca bien la pulsera en tu muñeca.")
+            print(
+                "Comprobando si el sensor envía "
+                "intervalos entre latidos..."
+            )
+            print("Presiona Ctrl+C para terminar.\n")
 
             reloj = asyncio.get_running_loop()
             ultima_lectura = reloj.time()
@@ -202,11 +234,11 @@ async def leer_pulso(cliente, publicar=None, actualizar=None):
             while True:
                 if not cliente.is_connected:
                     raise RuntimeError(
-                        "La pulsera se desconectó."
+                        "The watch disconnected."
                     )
 
-                # Permite al servidor consultar pasos,
-                # distancia y calorías cuando corresponda.
+                # Consulta pasos, distancia y calorías
+                # cuando el servidor lo solicita.
                 if actualizar is not None:
                     await actualizar(cliente)
 
@@ -224,8 +256,8 @@ async def leer_pulso(cliente, publicar=None, actualizar=None):
                     > TIEMPO_SIN_LECTURAS
                 ):
                     raise RuntimeError(
-                        "No se recibieron lecturas válidas durante "
-                        f"{TIEMPO_SIN_LECTURAS} segundos."
+                        "No valid readings were received for "
+                        f"{TIEMPO_SIN_LECTURAS} seconds."
                     )
 
                 try:
@@ -243,7 +275,52 @@ async def leer_pulso(cliente, publicar=None, actualizar=None):
                     continue
 
                 ultima_lectura = reloj.time()
+                paquetes_procesados += 1
 
+                # El pulso se conserva aunque el campo RR
+                # falte o tenga un formato incorrecto.
+                try:
+                    intervalos_rr = extraer_rr_ms(paquete)
+                except ValueError as error:
+                    errores_rr += 1
+                    intervalos_rr = []
+                    print(f"Campo RR descartado: {error}")
+
+                if publicar_rr is not None:
+                    publicar_rr(fecha, intervalos_rr)
+
+                if intervalos_rr:
+                    paquetes_con_rr += 1
+                    intervalos_recibidos += len(intervalos_rr)
+
+                    if not rr_detectado:
+                        rr_detectado = True
+                        print(
+                            "\nSe detectaron intervalos RR reales. "
+                            "Podemos comenzar a evaluar "
+                            "la captura para HRV.\n"
+                        )
+
+                    detalle_rr = ", ".join(
+                        f"{rr:.2f}"
+                        for rr in intervalos_rr
+                    )
+
+                    print(f"{fecha} | RR: [{detalle_rr}] ms")
+
+                elif (
+                    not paquete[0] & 0x10
+                    and not aviso_sin_rr
+                ):
+                    aviso_sin_rr = True
+                    print(
+                        "\nEste paquete contiene pulso, "
+                        "pero no intervalos RR. "
+                        "Con este paquete no se puede calcular HRV.\n"
+                    )
+
+                # Guarda el paquete completo, incluidos
+                # los intervalos RR si están presentes.
                 escritor.writerow([
                     fecha,
                     DIRECCION,
@@ -253,14 +330,25 @@ async def leer_pulso(cliente, publicar=None, actualizar=None):
                 ])
                 salida.flush()
 
-                # Envía la lectura al servidor para mostrarla
-                # en la aplicación React.
+                # Mantiene la publicación existente hacia la web.
                 if publicar is not None:
                     publicar(fecha, pulso)
 
                 print(f"{fecha} | Pulso: {pulso} BPM")
 
     finally:
+        print("\nResumen de captura:")
+        print(f"Paquetes procesados: {paquetes_procesados}")
+        print(f"Paquetes con RR extraídos: {paquetes_con_rr}")
+        print(f"Intervalos RR recibidos: {intervalos_recibidos}")
+        print(f"Errores al interpretar RR: {errores_rr}")
+
+        if paquetes_procesados and not intervalos_recibidos:
+            print(
+                "No se extrajeron intervalos RR en esta sesión. "
+                "HRV no puede calcularse con los datos recibidos."
+            )
+
         if cliente.is_connected:
             if medicion_solicitada:
                 with suppress(BleakError, TimeoutError):
@@ -273,6 +361,7 @@ async def leer_pulso(cliente, publicar=None, actualizar=None):
             if suscrito:
                 with suppress(BleakError, TimeoutError):
                     await cliente.stop_notify(medida)
+
 
 async def main():
     clave = solicitar_clave()
@@ -291,8 +380,9 @@ async def main():
 
     if dispositivo is None:
         raise RuntimeError(
-            "No se encontró tu Mi Band 5. "
-            "Acércala, enciende su pantalla y comprueba Bluetooth."
+            "Your Mi Band 5 was not found. "
+            "Bring it closer, turn on its screen, "
+            "and check Bluetooth."
         )
 
     print(f"Conectando a {dispositivo.address}...")
@@ -307,6 +397,9 @@ if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print("\nPrograma terminado. Las lecturas recibidas quedaron guardadas.")
+        print(
+            "\nPrograma terminado. "
+            "Las lecturas recibidas quedaron guardadas."
+        )
     except Exception:
         traceback.print_exc()

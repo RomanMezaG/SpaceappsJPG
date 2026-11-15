@@ -63,7 +63,7 @@ def obtener_fecha(fila):
         )
 
         if fecha.tzinfo is None:
-            raise ValueError("La fecha no incluye zona horaria.")
+            raise ValueError("The timestamp does not include a time zone.")
 
         return fecha.astimezone(timezone.utc)
 
@@ -74,7 +74,7 @@ def obtener_fecha(fila):
             float(segundos), timezone.utc
         )
 
-    raise ValueError("El registro no contiene una fecha reconocible.")
+    raise ValueError("The record does not contain a recognizable timestamp.")
 
 
 def normalizar(fila, tipo):
@@ -141,7 +141,7 @@ def normalizar(fila, tipo):
 def consolidar():
     if not CARPETA_DATOS.is_dir():
         raise FileNotFoundError(
-            f"No existe la carpeta:\n{CARPETA_DATOS}"
+            f"Directory not found:\n{CARPETA_DATOS}"
         )
 
     registros = {}
@@ -201,8 +201,8 @@ def consolidar():
             print(f"- {error}")
 
         raise ValueError(
-            f"Se encontraron {len(errores)} errores. "
-            "El historial consolidado no se reemplazó."
+            f"Found {len(errores)} errors. "
+            "The consolidated history was not replaced."
         )
 
     if not registros:
@@ -252,8 +252,8 @@ if __name__ == "__main__":
         consolidar()
     except PermissionError:
         print(
-            "No se pudo acceder a un archivo. "
-            "Cierra los CSV abiertos en Excel e inténtalo de nuevo."
+            "Could not access a file. "
+            "Close any CSV files open in Excel and try again."
         )
     except (OSError, ValueError, csv.Error) as error:
         print(f"\nError: {error}")

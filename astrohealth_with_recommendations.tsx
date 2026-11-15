@@ -1,8 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import ModelInputPanel from './src/ModelInputPanel';
+import LiveSummary, { SharedStatus } from './src/LiveSummary';
+import { useHealthData, extractModelInputs } from './src/HealthDataContext';
 import SmartWatchPanel from './src/SmartWatchPanel';
 import SmartWatchModelPanel from './src/SmartWatchModelPanel';
-import EVEA_MODEL from './models/modelo_evea.json';
+import { useWatchSession } from './src/SessionGate';
+import { EVEA_LABELS } from './src/eveaItems';
+import { predecirSecuenciaEVEA } from './src/eveaEngine.js';
+import { useEveaAssessment } from './src/useEveaAssessment.js';
 import {
   Heart,
   Activity,
@@ -30,128 +35,6 @@ import {
   ChevronLeft,
   ClipboardCheck
 } from 'lucide-react';
-
-const EVEA_LABELS = [
-  { id: 'p01', label: 'p01 • Nervous / Tense', dim: 'Anxiety' },
-  { id: 'p02', label: 'p02 • Irritated / Annoyed', dim: 'Anger' },
-  { id: 'p03', label: 'p03 • Cheerful / Lively', dim: 'Joy' },
-  { id: 'p04', label: 'p04 • Sad / Downcast', dim: 'Sadness' },
-  { id: 'p05', label: 'p05 • Anxious / Restless', dim: 'Anxiety' },
-  { id: 'p06', label: 'p06 • Optimistic / Content', dim: 'Joy' },
-  { id: 'p07', label: 'p07 • Melancholic / Subdued', dim: 'Sadness' },
-  { id: 'p08', label: 'p08 • Angry / Frustrated', dim: 'Anger' },
-  { id: 'p09', label: 'p09 • Worried / On edge', dim: 'Anxiety' },
-  { id: 'p10', label: 'p10 • Discouraged / Dejected', dim: 'Sadness' },
-  { id: 'p11', label: 'p11 • Hostile / Impatient', dim: 'Anger' },
-  { id: 'p12', label: 'p12 • Jovial / Enthusiastic', dim: 'Joy' },
-  { id: 'p13', label: 'p13 • Uneasy / Agitated', dim: 'Anxiety' },
-  { id: 'p14', label: 'p14 • Furious / Disgusted', dim: 'Anger' },
-  { id: 'p15', label: 'p15 • Satisfied / Positive', dim: 'Joy' },
-  { id: 'p16', label: 'p16 • Distressed / Pessimistic', dim: 'Sadness' }
-];
-
-// 4x4 linear algebra in JavaScript to run ClasificadorEVEA exactly
-const invertMatrix4x4 = (m) => {
-  const n = 4;
-  const aug = m.map((row, i) => [
-    ...row,
-    ...(Array.from({ length: n }, (_, j) => (i === j ? 1 : 0)))
-  ]);
-  for (let i = 0; i < n; i++) {
-    let pivot = i;
-    for (let r = i + 1; r < n; r++) {
-      if (Math.abs(aug[r][i]) > Math.abs(aug[pivot][i])) pivot = r;
-    }
-    [aug[i], aug[pivot]] = [aug[pivot], aug[i]];
-    const div = aug[i][i];
-    for (let j = 0; j < 2 * n; j++) aug[i][j] /= div;
-    for (let r = 0; r < n; r++) {
-      if (r !== i) {
-        const factor = aug[r][i];
-        for (let j = 0; j < 2 * n; j++) aug[r][j] -= factor * aug[i][j];
-      }
-    }
-  }
-  return aug.map((row) => row.slice(n));
-};
-
-const logDet4x4 = (m) => {
-  const a = m.map((r) => [...r]);
-  let det = 1;
-  for (let i = 0; i < 4; i++) {
-    let pivot = i;
-    for (let r = i + 1; r < 4; r++) {
-      if (Math.abs(a[r][i]) > Math.abs(a[pivot][i])) pivot = r;
-    }
-    if (pivot !== i) {
-      [a[i], a[pivot]] = [a[pivot], a[i]];
-      det = -det;
-    }
-    det *= a[i][i];
-    for (let r = i + 1; r < 4; r++) {
-      const f = a[r][i] / a[i][i];
-      for (let c = i; c < 4; c++) a[r][c] -= f * a[i][c];
-    }
-  }
-  return Math.log(Math.abs(det));
-};
-
-const EVEA_INVERSAS = EVEA_MODEL.covarianzas.map(invertMatrix4x4);
-const EVEA_LOGDET = EVEA_MODEL.covarianzas.map(logDet4x4);
-
-const calcularPuntajesEVEA = (respuestas16) => {
-  const { ansiedad, ira, alegria, tristeza } = EVEA_MODEL.items_evea;
-  const meanOf = (idxs) =>
-    idxs.reduce((acc, idx) => acc + Number(respuestas16[idx - 1] ?? 0), 0) / idxs.length;
-  return [meanOf(ansiedad), meanOf(ira), meanOf(alegria), meanOf(tristeza)];
-};
-
-const predecirSecuenciaEVEA = (secuenciaRespuestas) => {
-  let previa = [...EVEA_MODEL.inicio];
-  return secuenciaRespuestas.map((resp16, stepIdx) => {
-    const x = calcularPuntajesEVEA(resp16);
-    if (stepIdx > 0) {
-      const nextPrevia = [0, 0, 0];
-      for (let j = 0; j < 3; j++) {
-        for (let i = 0; i < 3; i++) {
-          nextPrevia[j] += previa[i] * EVEA_MODEL.transicion[i][j];
-        }
-      }
-      previa = nextPrevia;
-    }
-    const logPesos = [0, 1, 2].map((k) => {
-      const delta = x.map((val, d) => val - EVEA_MODEL.medias[k][d]);
-      let dist = 0;
-      for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 4; j++) {
-          dist += delta[i] * EVEA_INVERSAS[k][i][j] * delta[j];
-        }
-      }
-      const logEvidencia = -0.5 * (dist + EVEA_LOGDET[k]);
-      return logEvidencia + Math.log(previa[k]);
-    });
-    const maxLog = Math.max(...logPesos);
-    const exps = logPesos.map((lp) => Math.exp(lp - maxLog));
-    const sumExp = exps.reduce((a, b) => a + b, 0);
-    const posterior = exps.map((e) => e / sumExp);
-    previa = posterior;
-    const bestIdx = posterior.indexOf(Math.max(...posterior));
-    return {
-      estado: EVEA_MODEL.clases[bestIdx],
-      probabilidades: {
-        normal: posterior[0],
-        warning: posterior[1],
-        critic: posterior[2]
-      },
-      puntajes: {
-        ansiedad: x[0],
-        ira: x[1],
-        alegria: x[2],
-        tristeza: x[3]
-      }
-    };
-  });
-};
 
 /**
  * Initial definition of the 13 exact biomedical and aerospace parameters
@@ -599,8 +482,13 @@ const ClinicalRangeBar = ({ value, min, max, optimalMin, optimalMax, color, seve
 };
 
 export default function App() {
+  const { importModelInputs, watchData } = useHealthData();
+  const {
+    eveaAnswers, setEveaAnswers, eveaHistory, setEveaHistory,
+    eveaCurrentSaved, saveEveaAssessment,
+  } = useWatchSession();
   const [metrics, setMetrics] = useState(INITIAL_METRICS);
-  const [activeTab, setActiveTab] = useState('summary');
+  const [activeTab, setActiveTab] = useState('watchModel');
   const [selectedMetricId, setSelectedMetricId] = useState(null);
   const [csvRecords, setCsvRecords] = useState([]);
   const [csvHeaders, setCsvHeaders] = useState([]);
@@ -608,17 +496,11 @@ export default function App() {
   const [csvFileName, setCsvFileName] = useState('');
   const [csvError, setCsvError] = useState('');
   const [csvExplicitStatus, setCsvExplicitStatus] = useState(null); // State dictated by the last CSV column
-  const [eveaAnswers, setEveaAnswers] = useState([2, 2, 7, 2, 3, 7, 2, 2, 3, 2, 2, 7, 2, 2, 7, 2]);
-  const [eveaHistory, setEveaHistory] = useState([]);
   const [doneActions, setDoneActions] = useState({});
   const toggleAction = (key) => setDoneActions((d) => ({ ...d, [key]: !d[key] }));
 
   // Live result of the EVEA classifier (Gaussian HMM)
-  const eveaEvaluation = useMemo(() => {
-    const seq = [...eveaHistory, eveaAnswers];
-    const results = predecirSecuenciaEVEA(seq);
-    return results[results.length - 1];
-  }, [eveaAnswers, eveaHistory]);
+  const { evaluation: eveaEvaluation } = useEveaAssessment();
 
   const syncEveaToMetric = (evalNow) => {
     const confidencePct = Math.round(evalNow.probabilidades[evalNow.estado] * 100);
@@ -650,21 +532,23 @@ export default function App() {
     const updated = eveaAnswers.map((v, i) => (i === index ? num : v));
     setEveaAnswers(updated);
     setCsvExplicitStatus(null);
-    const evalNow = predecirSecuenciaEVEA([...eveaHistory, updated]).slice(-1)[0];
+    const evalNow = predecirSecuenciaEVEA([...eveaHistory.slice(-14), updated]).slice(-1)[0];
     syncEveaToMetric(evalNow);
   };
 
   const handleRecordEveaDay = () => {
-    const nextHist = [...eveaHistory.slice(-14), eveaAnswers];
-    setEveaHistory(nextHist);
-    const evalNow = predecirSecuenciaEVEA([...nextHist, eveaAnswers]).slice(-1)[0];
+    if (eveaCurrentSaved) return;
+    const nextHist = [...eveaHistory.slice(-14), [...eveaAnswers]];
+    saveEveaAssessment();
+    const evalNow = predecirSecuenciaEVEA(nextHist).slice(-1)[0];
     syncEveaToMetric(evalNow);
   };
 
   // Normalizes the last CSV column value to 'NORMAL', 'WARNING' or 'CRITICAL'
   const parseLastColumnStatus = (rowObj, headersList) => {
     if (!rowObj || !headersList || headersList.length === 0) return null;
-    const lastHeader = headersList[headersList.length - 1];
+    const lastHeader = headersList.find((header) => ['status', 'classification', 'estado', 'clasificacion'].includes(header.toLowerCase()));
+    if (!lastHeader) return null;
     const rawStatus = String(rowObj[lastHeader] ?? '').trim().toUpperCase();
     if (!rawStatus) return null;
 
@@ -703,8 +587,9 @@ export default function App() {
 
   // Flexible mapping of CSV columns to the 13 exact parameters + reading of the last column
   const mapCsvRowToMetrics = (rowObj, allRows, currentIdx, headersList) => {
+    importModelInputs(extractModelInputs(rowObj));
     // Exclude the last column from numeric mapping because it dictates the global state
-    const featureEntries = Object.entries(rowObj).slice(0, -1);
+    const featureEntries = Object.entries(rowObj);
 
     const findVal = (keywords) => {
       const entry = featureEntries.find(([key]) =>
@@ -747,7 +632,7 @@ export default function App() {
         const sliceRows = allRows.slice(startSlice, currentIdx);
         const csvHist = sliceRows
           .map((r) => {
-            const entries = Object.entries(r).slice(0, -1);
+            const entries = Object.entries(r);
             const entry = entries.find(([k]) =>
               keywords.some((kw) => k.toLowerCase().includes(kw))
             );
@@ -762,7 +647,7 @@ export default function App() {
         } else if (m.id === 'cardiac') {
           secondaryLabel = `HRV: ${Math.max(18, Math.round(115 - nextVal * 0.85))} ms`;
         } else if (m.id === 'mares') {
-          secondaryLabel = `Meta orbital: ${Math.round((nextVal / 430) * 100)}%`;
+          secondaryLabel = `Orbital goal: ${Math.round((nextVal / 430) * 100)}%`;
         }
 
         return {
@@ -770,7 +655,7 @@ export default function App() {
           value: nextVal,
           secondaryLabel,
           history: csvHist.length >= 1 ? csvHist : m.history,
-          updatedAt: `Historial #${currentIdx + 1}`
+          updatedAt: `History #${currentIdx + 1}`
         };
       })
     );
@@ -849,7 +734,7 @@ export default function App() {
           secondaryLabel = `HRV: ${hrv} ms`;
         } else if (id === 'mares') {
           const pctGoal = Math.round((clamped / 430) * 100);
-          secondaryLabel = `Meta orbital: ${pctGoal}%`;
+          secondaryLabel = `Orbital goal: ${pctGoal}%`;
         }
         return {
           ...m,
@@ -1054,13 +939,13 @@ export default function App() {
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3.5 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <span className="inline-flex h-2 w-2 rounded-full bg-[#34C759]" />
+              <span className={`inline-flex h-2 w-2 rounded-full ${watchData?.estado?.pulso_reciente ? "bg-[#34C759]" : "bg-slate-400"}`} />
               <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
-                AstroHealth • Orbital Telemetry iOS
+                Mission Health Monitoring
               </span>
             </div>
             <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
-              Health Summary
+              Ridge Support System
             </h1>
           </div>
 
@@ -1081,7 +966,7 @@ export default function App() {
             <div className="flex items-center rounded-full bg-white p-1 shadow-sm ring-1 ring-black/5">
               {[
                 { id: 'summary', label: 'Summary', icon: BarChart3 },
-                { id: 'inputs', label: 'Model Input (25)', icon: Sliders },
+                { id: 'inputs', label: 'Model Input (27)', icon: Sliders },
                 { id: 'evea', label: 'EVEA HMM', icon: ClipboardCheck },
                 { id: 'mares', label: 'MARES', icon: Dumbbell },
                 { id: 'watch', label: 'Smart Watch', icon: Activity },
@@ -1167,181 +1052,14 @@ export default function App() {
           </div>
         )}
 
-        {/* HERO PREVIEW: GLOBAL CLINICAL STATE (NORMAL / WARNING / CRITICAL), APPLE HEALTH iOS STYLE */}
-        <section
-          aria-label="Global Clinical Status of the Astronaut"
-          className={`mb-7 overflow-hidden rounded-[28px] bg-white p-5 transition-all duration-300 sm:p-6 ${heroStatus.borderClass}`}
-        >
-          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
-            {/* Bloque Izquierdo: Anillo Radial Apple Health + Badge Protagonista */}
-            <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-              {/* Radial progress ring, Apple Fitness / Health style */}
-              <div className="relative flex h-28 w-28 shrink-0 items-center justify-center">
-                {heroStatus.level === 'CRITICAL' && (
-                  <span
-                    className="absolute inset-1 animate-ping rounded-full opacity-20"
-                    style={{ backgroundColor: heroStatus.accent }}
-                  />
-                )}
-                <svg className="h-28 w-28 -rotate-90 transform" viewBox="0 0 112 112">
-                  <circle
-                    cx="56"
-                    cy="56"
-                    r={ringRadius}
-                    fill="transparent"
-                    stroke="#F2F2F7"
-                    strokeWidth="10"
-                  />
-                  <circle
-                    cx="56"
-                    cy="56"
-                    r={ringRadius}
-                    fill="transparent"
-                    stroke={heroStatus.accent}
-                    strokeWidth="10"
-                    strokeDasharray={ringCircumference}
-                    strokeDashoffset={ringDashOffset}
-                    strokeLinecap="round"
-                    className="transition-all duration-500 ease-out"
-                  />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                  <span
-                    className="text-2xl font-extrabold tracking-tight"
-                    style={{ color: heroStatus.accent }}
-                  >
-                    {heroStatus.score}%
-                  </span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
-                    Index
-                  </span>
-                </div>
-              </div>
+        {activeTab !== 'summary' && <SharedStatus />}
+        {activeTab === 'summary' && <LiveSummary />}
 
-              {/* Main NORMAL / WARNING / CRITICAL label + summary */}
-              <div className="max-w-xl">
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <span
-                    className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-extrabold uppercase tracking-wider text-white shadow-sm"
-                    style={{ backgroundColor: heroStatus.accent }}
-                  >
-                    {heroStatus.level === 'CRITICAL' ? (
-                      <ShieldAlert className="h-3.5 w-3.5" />
-                    ) : heroStatus.level === 'WARNING' ? (
-                      <AlertTriangle className="h-3.5 w-3.5" />
-                    ) : (
-                      <ShieldCheck className="h-3.5 w-3.5" />
-                    )}
-                    {heroStatus.badge}
-                  </span>
-                  <span className="text-xs font-semibold text-gray-400">
-                    Global Physiological Status • 13 Parameters
-                  </span>
-                </div>
-
-                <h2 className="mt-2 text-xl font-extrabold tracking-tight text-gray-900 sm:text-2xl">
-                  {heroStatus.headline}
-                </h2>
-                <p className="mt-1 text-xs leading-relaxed text-gray-600 sm:text-sm">
-                  {heroStatus.summary}
-                </p>
-
-                {/* Interactive chips for active alerts, if any */}
-                {(criticalMetrics.length > 0 || warningMetrics.length > 0) && (
-                  <div className="mt-3 flex flex-wrap items-center gap-1.5">
-                    {criticalMetrics.map((m) => (
-                      <button
-                        key={m.id}
-                        onClick={() => focusMetricCard(m.id)}
-                        className="inline-flex items-center gap-1 rounded-full bg-[#FF3B30]/12 px-2.5 py-1 text-[11px] font-bold text-[#D70015] transition hover:bg-[#FF3B30]/20"
-                      >
-                        <span>{m.title}:</span>
-                        <span>
-                          {m.value} {m.unit}
-                        </span>
-                      </button>
-                    ))}
-                    {warningMetrics.map((m) => (
-                      <button
-                        key={m.id}
-                        onClick={() => focusMetricCard(m.id)}
-                        className="inline-flex items-center gap-1 rounded-full bg-[#FF9500]/15 px-2.5 py-1 text-[11px] font-bold text-[#B25E00] transition hover:bg-[#FF9500]/25"
-                      >
-                        <span>{m.title}:</span>
-                        <span>
-                          {m.value} {m.unit}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-                {actionPlan.length > 0 && (
-                  <div className="mt-4 rounded-2xl bg-white/70 p-3 ring-1 ring-black/5">
-                    <p className="mb-1 flex items-center gap-1.5 text-xs font-bold text-gray-900">
-                      <ClipboardCheck className="h-3.5 w-3.5" /> Recommended actions
-                    </p>
-                    {actionPlan.slice(0, 3).map(({ metric, severity, steps }) => (
-                      <div key={metric.id} className="border-t border-black/5 py-2 first:border-t-0">
-                        <button
-                          onClick={() => focusMetricCard(metric.id)}
-                          className={`text-[11px] font-bold ${
-                            severity === 'critical' ? 'text-[#D70015]' : 'text-[#B25E00]'
-                          }`}
-                        >
-                          {severity === 'critical' ? 'Critical' : 'Caution'} · {metric.title}
-                        </button>
-                        {steps.slice(0, 2).map((st, i) => {
-                          const k = `${metric.id}-${i}`;
-                          return (
-                            <label key={k} className="mt-1 flex cursor-pointer items-start gap-2 text-xs text-gray-700">
-                              <input
-                                type="checkbox"
-                                checked={!!doneActions[k]}
-                                onChange={() => toggleAction(k)}
-                                className="mt-0.5"
-                              />
-                              <span className={doneActions[k] ? 'text-gray-400 line-through' : ''}>{st}</span>
-                            </label>
-                          );
-                        })}
-                      </div>
-                    ))}
-                    {actionPlan.length > 3 && (
-                      <p className="pt-1 text-[11px] text-gray-500">
-                        +{actionPlan.length - 3} more parameters. Open each for details.
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Right block: breakdown by the 3 biomedical systems */}
-            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 lg:w-[410px] lg:grid-cols-1">
-              {systemSummaries.map((sys) => (
-                <div
-                  key={sys.key}
-                  className="flex items-center justify-between rounded-2xl bg-[#F2F2F7]/75 px-4 py-2.5"
-                >
-                  <div>
-                    <p className="text-xs font-bold text-gray-900">{sys.label}</p>
-                    <p className="text-[11px] text-gray-500">{sys.detail}</p>
-                  </div>
-                  <span
-                    className="rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider"
-                    style={{
-                      backgroundColor: `${sys.color}18`,
-                      color: sys.color
-                    }}
-                  >
-                    {sys.status}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
+        {activeTab === 'mares' && (
+          <p className="mb-5 rounded-2xl border border-slate-200 bg-white p-4 text-xs text-slate-500">
+            MARES demonstration values are separate from live watch data and shared XGBoost inputs.
+          </p>
+        )}
         {activeTab === 'watch' && <SmartWatchPanel />}
         {activeTab === 'watchModel' && <SmartWatchModelPanel />}
 
@@ -1359,7 +1077,7 @@ export default function App() {
                     Mood Assessment (16 Items • 0–10)
                   </h3>
                   <p className="mt-1 text-xs text-gray-500">
-                    Computes the 4 dimensions (Anxiety, Anger, Joy, Sadness) in real time with a temporal transition matrix and updates the Psychological parameter.
+                    Your initial check-in is loaded here. Adjust the answers for a new assessment, then save it to update the HMM sequence.
                   </p>
                 </div>
 
@@ -1384,9 +1102,10 @@ export default function App() {
                   </div>
                   <button
                     onClick={handleRecordEveaDay}
-                    className="rounded-2xl bg-[#007AFF] px-4 py-3 text-xs font-bold text-white shadow-sm transition hover:bg-[#0066D6]"
+                    disabled={eveaCurrentSaved}
+                    className="rounded-2xl bg-[#007AFF] px-4 py-3 text-xs font-bold text-white shadow-sm transition hover:bg-[#0066D6] disabled:opacity-50"
                   >
-                    Save Day ({eveaHistory.length + 1})
+                    {eveaCurrentSaved ? `Saved · assessment ${eveaHistory.length}` : `Save assessment (${eveaHistory.length + 1})`}
                   </button>
                 </div>
               </div>
@@ -1410,7 +1129,7 @@ export default function App() {
 
               {/* Probabilities of the temporal Bayes filter */}
               <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl bg-[#F2F2F7]/60 px-4 py-2.5 text-xs">
-                <span className="font-bold text-gray-700">Probabilidad Posterior HMM:</span>
+                <span className="font-bold text-gray-700">HMM posterior probability:</span>
                 <span className="font-bold text-[#34C759]">
                   Normal: {(eveaEvaluation.probabilidades.normal * 100).toFixed(1)}%
                 </span>
@@ -1425,7 +1144,7 @@ export default function App() {
                     onClick={() => setEveaHistory([])}
                     className="ml-auto text-[11px] font-bold text-gray-500 underline hover:text-gray-800"
                   >
-                    Reset sequence ({eveaHistory.length} previous days)
+                    Reset sequence ({eveaHistory.length} saved assessments)
                   </button>
                 )}
               </div>
@@ -1576,11 +1295,11 @@ export default function App() {
           )}
 
           {/* COLUMNA DE RESUMEN APPLE HEALTH (13 TARJETAS FIJADAS) */}
-          {(activeTab === 'summary' || activeTab === 'mares') && (
+          {activeTab === 'mares' && (
             <section className="lg:col-span-12">
               <div className="mb-3 flex items-center justify-between px-1">
                 <h3 className="text-lg font-bold tracking-tight text-gray-900">
-                  Pinned • Health Monitoring
+                  MARES demonstration data
                 </h3>
                 <span className="text-xs font-medium text-gray-500">
                   Tap a card for clinical details
@@ -1588,7 +1307,7 @@ export default function App() {
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {metrics.map((metric) => {
+                {metrics.filter((metric) => metric.system === 'mares').map((metric) => {
                   const isEveaMetric = metric.id === 'psychological';
                   const severity = isEveaMetric
                     ? eveaEvaluation.estado === 'critic'

@@ -1,0 +1,19 @@
+{
+  "estado": "importado",
+  "fecha_importacion_utc": "2026-11-15T20:00:41.114201+00:00",
+  "archivo_origen": "C:\\Users\\oswal\\Documents\\GitHub\\RIDGE\\watch\\datos\\historial_completo.csv",
+  "direccion": "F0:D8:99:0D:4E:06",
+  "metodo": "actividad_relativa_historico_v1",
+  "filas_leidas": 13089,
+  "fechas_invalidas": 0,
+  "minutos_completos": 2280,
+  "minutos_importados": 2271,
+  "minutos_sin_referencia": 9,
+  "referencias_bpm_por_dia": {
+    "2026-11-09": 69.0,
+    "2026-11-10": 70.0,
+    "2026-11-11": 88.0,
+    "2026-11-12": 72.0,
+    "2026-11-14": 84.0
+  }
+}

@@ -75,7 +75,7 @@ export const MODEL_INPUT_GROUPS = [
     fields: [
       { key: 'water_intake_l_day', label: 'Water intake', unit: 'L/day', min: 1.2, max: 3.6, step: 0.01 },
       { key: 'calorie_intake_kcal_day', label: 'Calorie intake', unit: 'kcal/day', min: 1700, max: 3300, step: 1 },
-      { key: 'stress_level_1_10', label: 'Stress level', unit: '/ 10', min: 1, max: 8.1, step: 0.1 },
+      { key: 'stress_level_1_10', label: 'Stress', unit: '/ 10', min: 1, max: 10, step: 0.1 },
     ]
   }
 ];

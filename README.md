@@ -1,4 +1,24 @@
-# AstroHealth
+# Ridge Support System
+
+## Shared monitoring data
+
+Summary, Model Input, Smart Watch, and Watch + XGBoost use one session-wide data
+source. Watch values refresh in every tab and manual/CSV inputs persist when
+switching views. The original sliders and default configuration are restored,
+with defaults labeled and available live readings taking priority. Complete all 27 features or explicitly enable the saved
+model imputer in the shared result panel. Imputation is off by default. See
+`SHARED_HEALTH_DATA.md` for sources, freshness, and prediction behavior.
+
+## Start with a session profile
+
+After starting the three services, open the web app and select age (years),
+height (cm), and weight (kg). Click **Continue to mood check-in**, answer all
+16 EVEA questions, then click **Finish & connect watch**. The EVEA HMM tab
+uses those same answers and records the completed assessment once. The watch
+service waits until this final submission before scanning or calculating
+indicators. Reloading the page resets the session and asks for both steps again.
+See `EVEA_ONBOARDING.md` for the shared assessment state and
+`PERFIL_Y_SESION.md` for calculation methods and session behavior.
 
 ## Run the app and model API
 
