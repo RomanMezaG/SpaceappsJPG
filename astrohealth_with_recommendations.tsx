@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import ModelInputPanel from './src/ModelInputPanel';
+import CheckupReminder from './src/CheckupReminder';
 import LiveSummary, { SharedStatus } from './src/LiveSummary';
 import { useHealthData, extractModelInputs } from './src/HealthDataContext';
 import SmartWatchPanel from './src/SmartWatchPanel';
@@ -995,6 +996,7 @@ export default function App() {
 
       {/* MAIN CONTENT */}
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+        <CheckupReminder />
         {/* CSV TELEMETRY BAR WHEN THE FILE IS LOADED */}
         {(csvRecords.length > 0 || csvError) && (
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white px-4 py-3 shadow-sm ring-1 ring-black/5">

@@ -16086,3 +16086,98 @@
 2026-11-15T23:22:56.461040+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,90,,,,,,,,,No informado,005a,pulso_20261115_151514_991679.csv
 2026-11-15T23:22:58.485849+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,91,,,,,,,,,No informado,005b,pulso_20261115_151514_991679.csv
 2026-11-15T23:22:59.475791+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,92,,,,,,,,,No informado,005c,pulso_20261115_151514_991679.csv
+2026-11-15T23:23:00.465759+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,93,,,,,,,,,No informado,005d,pulso_20261115_151514_991679.csv
+2026-11-15T23:23:04.471821+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,94,,,,,,,,,No informado,005e,pulso_20261115_151514_991679.csv
+2026-11-15T23:23:05.957559+00:00,F0:D8:99:0D:4E:06,resumen_acumulado,consulta_PC,,,1947,1331,53,,,,,,,web\resumen_actual.csv
+2026-11-15T23:23:06.496901+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,93,,,,,,,,,No informado,005d,pulso_20261115_151514_991679.csv
+2026-11-15T23:23:09.466901+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,92,,,,,,,,,No informado,005c,pulso_20261115_151514_991679.csv
+2026-11-15T23:43:48.068560+00:00,F0:D8:99:0D:4E:06,resumen_acumulado,consulta_PC,,,2254,1544,65,,,,,,,web\resumen_actual.csv
+2026-11-15T23:44:08.318209+00:00,F0:D8:99:0D:4E:06,resumen_acumulado,consulta_PC,,,2254,1544,65,,,,,,,web\resumen_actual.csv
+2026-11-15T23:44:22.516161+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,107,,,,,,,,,No informado,006b,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:23.438148+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,106,,,,,,,,,No informado,006a,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:25.418865+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,105,,,,,,,,,No informado,0069,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:27.436630+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,106,,,,,,,,,No informado,006a,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:28.521572+00:00,F0:D8:99:0D:4E:06,resumen_acumulado,consulta_PC,,,2254,1544,65,,,,,,,web\resumen_actual.csv
+2026-11-15T23:44:31.510097+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,107,,,,,,,,,No informado,006b,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:32.437950+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,108,,,,,,,,,No informado,006c,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:35.535458+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,109,,,,,,,,,No informado,006d,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:38.422026+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,110,,,,,,,,,No informado,006e,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:40.509325+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,111,,,,,,,,,No informado,006f,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:41.436606+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,112,,,,,,,,,No informado,0070,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:42.418730+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,113,,,,,,,,,No informado,0071,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:47.487497+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,113,,,,,,,,,No informado,0071,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:48.411063+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,110,,,,,,,,,No informado,006e,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:49.448679+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,109,,,,,,,,,No informado,006d,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:49.493707+00:00,F0:D8:99:0D:4E:06,resumen_acumulado,consulta_PC,,,2254,1544,65,,,,,,,web\resumen_actual.csv
+2026-11-15T23:44:54.507067+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,110,,,,,,,,,No informado,006e,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:56.466022+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,112,,,,,,,,,No informado,0070,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:57.411368+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,114,,,,,,,,,No informado,0072,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:58.447216+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,116,,,,,,,,,No informado,0074,pulso_20261115_154347_970523.csv
+2026-11-15T23:44:59.437563+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,115,,,,,,,,,No informado,0073,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:00.415667+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,117,,,,,,,,,No informado,0075,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:01.439504+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,120,,,,,,,,,No informado,0078,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:02.452428+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,122,,,,,,,,,No informado,007a,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:03.442021+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,123,,,,,,,,,No informado,007b,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:08.507097+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,123,,,,,,,,,No informado,007b,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:09.419709+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,124,,,,,,,,,No informado,007c,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:09.518758+00:00,F0:D8:99:0D:4E:06,resumen_acumulado,consulta_PC,,,2254,1544,65,,,,,,,web\resumen_actual.csv
+2026-11-15T23:45:10.403877+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,125,,,,,,,,,No informado,007d,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:13.495233+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,126,,,,,,,,,No informado,007e,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:14.422311+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,125,,,,,,,,,No informado,007d,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:18.472641+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,126,,,,,,,,,No informado,007e,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:19.417024+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,125,,,,,,,,,No informado,007d,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:24.475592+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,126,,,,,,,,,No informado,007e,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:29.536157+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,126,,,,,,,,,No informado,007e,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:29.587413+00:00,F0:D8:99:0D:4E:06,resumen_acumulado,consulta_PC,,,2254,1544,65,,,,,,,web\resumen_actual.csv
+2026-11-15T23:45:32.485680+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,125,,,,,,,,,No informado,007d,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:38.515076+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,123,,,,,,,,,No informado,007b,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:40.431947+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,124,,,,,,,,,No informado,007c,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:41.451918+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,123,,,,,,,,,No informado,007b,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:42.411022+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,121,,,,,,,,,No informado,0079,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:43.447017+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,119,,,,,,,,,No informado,0077,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:45.422511+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,118,,,,,,,,,No informado,0076,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:50.506264+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,118,,,,,,,,,No informado,0076,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:50.558445+00:00,F0:D8:99:0D:4E:06,resumen_acumulado,consulta_PC,,,2254,1544,65,,,,,,,web\resumen_actual.csv
+2026-11-15T23:45:54.490531+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,119,,,,,,,,,No informado,0077,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:55.413533+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,120,,,,,,,,,No informado,0078,pulso_20261115_154347_970523.csv
+2026-11-15T23:45:58.584294+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,118,,,,,,,,,No informado,0076,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:01.510356+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,119,,,,,,,,,No informado,0077,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:03.425733+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,117,,,,,,,,,No informado,0075,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:06.551796+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,116,,,,,,,,,No informado,0074,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:08.420507+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,114,,,,,,,,,No informado,0072,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:09.426668+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,112,,,,,,,,,No informado,0070,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:10.447381+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,108,,,,,,,,,No informado,006c,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:10.524090+00:00,F0:D8:99:0D:4E:06,resumen_acumulado,consulta_PC,,,2254,1544,65,,,,,,,web\resumen_actual.csv
+2026-11-15T23:46:11.438613+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,106,,,,,,,,,No informado,006a,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:12.437238+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,105,,,,,,,,,No informado,0069,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:14.541303+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,104,,,,,,,,,No informado,0068,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:16.432693+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,103,,,,,,,,,No informado,0067,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:18.411583+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,102,,,,,,,,,No informado,0066,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:20.437800+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,103,,,,,,,,,No informado,0067,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:21.427738+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,105,,,,,,,,,No informado,0069,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:22.440872+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,107,,,,,,,,,No informado,006b,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:23.407623+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,108,,,,,,,,,No informado,006c,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:24.532553+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,109,,,,,,,,,No informado,006d,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:26.415460+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,108,,,,,,,,,No informado,006c,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:30.490784+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,107,,,,,,,,,No informado,006b,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:30.578205+00:00,F0:D8:99:0D:4E:06,resumen_acumulado,consulta_PC,,,2254,1544,65,,,,,,,web\resumen_actual.csv
+2026-11-15T23:46:35.487163+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,107,,,,,,,,,No informado,006b,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:39.495369+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,106,,,,,,,,,No informado,006a,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:42.506961+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,107,,,,,,,,,No informado,006b,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:44.422182+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,108,,,,,,,,,No informado,006c,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:49.481782+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,108,,,,,,,,,No informado,006c,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:50.590626+00:00,F0:D8:99:0D:4E:06,resumen_acumulado,consulta_PC,,,2254,1544,65,,,,,,,web\resumen_actual.csv
+2026-11-15T23:46:54.482011+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,109,,,,,,,,,No informado,006d,pulso_20261115_154347_970523.csv
+2026-11-15T23:46:59.408017+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,109,,,,,,,,,No informado,006d,pulso_20261115_154347_970523.csv
+2026-11-15T23:47:00.488854+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,110,,,,,,,,,No informado,006e,pulso_20261115_154347_970523.csv
+2026-11-15T23:47:01.434129+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,111,,,,,,,,,No informado,006f,pulso_20261115_154347_970523.csv
+2026-11-15T23:47:05.501480+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,113,,,,,,,,,No informado,0071,pulso_20261115_154347_970523.csv
+2026-11-15T23:47:09.509721+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,114,,,,,,,,,No informado,0072,pulso_20261115_154347_970523.csv
+2026-11-15T23:47:10.431146+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,113,,,,,,,,,No informado,0071,pulso_20261115_154347_970523.csv
+2026-11-15T23:47:11.514520+00:00,F0:D8:99:0D:4E:06,resumen_acumulado,consulta_PC,,,2254,1544,65,,,,,,,web\resumen_actual.csv
+2026-11-15T23:47:15.492545+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,114,,,,,,,,,No informado,0072,pulso_20261115_154347_970523.csv
+2026-11-15T23:47:17.401416+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,116,,,,,,,,,No informado,0074,pulso_20261115_154347_970523.csv
+2026-11-15T23:47:18.430109+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,117,,,,,,,,,No informado,0075,pulso_20261115_154347_970523.csv
+2026-11-15T23:47:23.500874+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,117,,,,,,,,,No informado,0075,pulso_20261115_154347_970523.csv
+2026-11-15T23:47:28.496792+00:00,F0:D8:99:0D:4E:06,pulso_en_vivo,recepcion_PC,117,,,,,,,,,No informado,0075,pulso_20261115_154347_970523.csv
+2026-11-15T23:48:31.301270+00:00,F0:D8:99:0D:4E:06,resumen_acumulado,consulta_PC,,,2254,1544,65,,,,,,,web\resumen_actual.csv
