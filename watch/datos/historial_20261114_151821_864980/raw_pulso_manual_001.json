@@ -1,0 +1,21 @@
+{
+  "tipo_hex": "0x02",
+  "solicitado_desde_utc": "2026-11-07T23:18:00+00:00",
+  "inicio_devuelto": "2026-11-07T23:18:00+00:00",
+  "fin_transferencia_recibido": true,
+  "eventos": [
+    {
+      "canal": "control",
+      "hex": "1001010d000000ea070b0717120000"
+    },
+    {
+      "canal": "datos",
+      "hex": "00646cf26ae06c24b2f86ae0560bbff86ae05121c3f86ae05547c3f86ae05578c3f86ae05fa4c3f86ae06933caf86ae047e7caf86ae05248e1f86ae0619de1f86ae05fcbe8f86ae0600eecf86ae05e"
+    },
+    {
+      "canal": "control",
+      "hex": "100201"
+    }
+  ],
+  "contenido_hex": "646cf26ae06c24b2f86ae0560bbff86ae05121c3f86ae05547c3f86ae05578c3f86ae05fa4c3f86ae06933caf86ae047e7caf86ae05248e1f86ae0619de1f86ae05fcbe8f86ae0600eecf86ae05e"
+}

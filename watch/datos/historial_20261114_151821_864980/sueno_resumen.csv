@@ -1,0 +1,9 @@
+﻿direccion,fecha_utc,minutos_con_registro,minutos_marcados_sueno,horas_marcadas_sueno,metodo
+F0:D8:99:0D:4E:06,2026-11-07,42,0,0.0,conteo_tipo_raw_120
+F0:D8:99:0D:4E:06,2026-11-08,1440,0,0.0,conteo_tipo_raw_120
+F0:D8:99:0D:4E:06,2026-11-09,1440,0,0.0,conteo_tipo_raw_120
+F0:D8:99:0D:4E:06,2026-11-10,1440,0,0.0,conteo_tipo_raw_120
+F0:D8:99:0D:4E:06,2026-11-11,1439,0,0.0,conteo_tipo_raw_120
+F0:D8:99:0D:4E:06,2026-11-12,1440,0,0.0,conteo_tipo_raw_120
+F0:D8:99:0D:4E:06,2026-11-13,1440,0,0.0,conteo_tipo_raw_120
+F0:D8:99:0D:4E:06,2026-11-14,1398,0,0.0,conteo_tipo_raw_120

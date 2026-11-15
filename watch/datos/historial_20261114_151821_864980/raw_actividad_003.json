@@ -1,0 +1,13 @@
+{
+  "tipo_hex": "0x01",
+  "solicitado_desde_utc": "2026-11-14T23:18:00+00:00",
+  "inicio_devuelto": "2026-11-14T23:18:00+00:00",
+  "fin_transferencia_recibido": true,
+  "eventos": [
+    {
+      "canal": "control",
+      "hex": "10010100000000ea070b0e0f1200e0"
+    }
+  ],
+  "contenido_hex": ""
+}

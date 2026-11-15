@@ -1,0 +1,35 @@
+{
+  "direccion": "F0:D8:99:0D:4E:06",
+  "desde_utc": "2026-11-07T23:18:00+00:00",
+  "hasta_utc": "2026-11-14T23:18:21.864666+00:00",
+  "tipos": {
+    "actividad": {
+      "estado": "sin_mas_datos_segun_pulsera",
+      "registros": 10079,
+      "error": null
+    },
+    "pulso_manual": {
+      "estado": "sin_mas_datos_segun_pulsera",
+      "registros": 13,
+      "error": null
+    },
+    "estres_automatico": {
+      "estado": "sin_mas_datos_segun_pulsera",
+      "registros": 0,
+      "error": null
+    },
+    "estres_manual": {
+      "estado": "sin_mas_datos_segun_pulsera",
+      "registros": 0,
+      "error": null
+    },
+    "pai": {
+      "estado": "alcanzado_fin_del_intervalo",
+      "registros": 7,
+      "error": null
+    }
+  },
+  "origen_zona": "pulsera",
+  "offset_utc_minutos": -480,
+  "resumen": "leido; comparar con la pantalla de la pulsera"
+}

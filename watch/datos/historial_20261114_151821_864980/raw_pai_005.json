@@ -1,0 +1,41 @@
+{
+  "tipo_hex": "0x0d",
+  "solicitado_desde_utc": "2026-11-11T08:00:00+00:00",
+  "inicio_devuelto": "2026-11-12T07:59:50+00:00",
+  "fin_transferencia_recibido": true,
+  "eventos": [
+    {
+      "canal": "control",
+      "hex": "10010166000000ea070b0b173b32e0"
+    },
+    {
+      "canal": "datos",
+      "hex": "0005f671f56ae0ffffff81f5dd39221f043898fe"
+    },
+    {
+      "canal": "datos",
+      "hex": "010039654bf738599a9d380000000000000000d8"
+    },
+    {
+      "canal": "datos",
+      "hex": "020c1b3d0000000000000000040000000000d80c"
+    },
+    {
+      "canal": "datos",
+      "hex": "031b3de17e7d3e4100c6000300e17e7d3e87ca64"
+    },
+    {
+      "canal": "datos",
+      "hex": "043e87ca643e87ca643ea634b33d3d809e3dea20"
+    },
+    {
+      "canal": "datos",
+      "hex": "051b3d00145c779e"
+    },
+    {
+      "canal": "control",
+      "hex": "100201"
+    }
+  ],
+  "contenido_hex": "05f671f56ae0ffffff81f5dd39221f043898fe0039654bf738599a9d380000000000000000d80c1b3d0000000000000000040000000000d80c1b3de17e7d3e4100c6000300e17e7d3e87ca643e87ca643e87ca643ea634b33d3d809e3dea201b3d00145c779e"
+}
